@@ -7,6 +7,7 @@ import Compose from './components/Compose';
 import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
 import ForgotPass from './pages/ForgotPass';
+import Logout from './pages/Logout';
 
 function App() {
   const [showCompose, setShowCompose] = React.useState(false);
@@ -21,28 +22,36 @@ function App() {
 function AppContent({ showCompose, setShowCompose }) {
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgotpassword';
+  const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {!isAuthPage && <Header />}
+      {!isAuthPage && isAuthenticated && <Header />}
       <div className="flex">
-        {!isAuthPage && <Sidebar onCompose={() => setShowCompose(true)} />}
+        {!isAuthPage && isAuthenticated && <Sidebar onCompose={() => setShowCompose(true)} />}
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<EmailList />} />
-            <Route path="/inbox" element={<EmailList />} />
-            <Route path="/starred" element={<EmailList />} />
-            <Route path="/sent" element={<EmailList />} />
-            <Route path="/drafts" element={<EmailList />} />
-            <Route path="/trash" element={<EmailList />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgotpassword" element={<ForgotPass />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            
+            {isAuthenticated ? (
+              <>
+                <Route path="/" element={<EmailList />} />
+                <Route path="/inbox" element={<EmailList />} />
+                <Route path="/starred" element={<EmailList />} />
+                <Route path="/sent" element={<EmailList />} />
+                <Route path="/drafts" element={<EmailList />} />
+                <Route path="/trash" element={<EmailList />} />
+                <Route path="/logout" element={<Logout />} />
+              </>
+            ) : (
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            )}
           </Routes>
         </main>
       </div>
-      {showCompose && !isAuthPage && <Compose onClose={() => setShowCompose(false)} />}
+      {showCompose && !isAuthPage && isAuthenticated && <Compose onClose={() => setShowCompose(false)} />}
     </div>
   );
 }
