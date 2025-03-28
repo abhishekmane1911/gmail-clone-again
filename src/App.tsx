@@ -6,6 +6,7 @@ import EmailList from './components/EmailList';
 import Compose from './components/Compose';
 import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
+import ForgotPass from './pages/ForgotPass';
 
 function App() {
   const [showCompose, setShowCompose] = React.useState(false);
@@ -19,7 +20,7 @@ function App() {
 
 function AppContent({ showCompose, setShowCompose }) {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgotpassword';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,6 +37,7 @@ function AppContent({ showCompose, setShowCompose }) {
             <Route path="/trash" element={<EmailList />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgotpassword" element={<ForgotPass />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
