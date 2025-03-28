@@ -2,20 +2,11 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.header("Authorization"); // Get token from headers
-
-  if (!token) {
-    return res
-      .status(401)
-      .json({ message: "Access denied. No token provided." });
-  }
+  const token = req.header("Authorization") || ""; // Get token from headers
 
   try {
     // Verify Token
-    const decoded = jwt.verify(
-      token.replace("Bearer ", ""),
-      process.env.JWT_SECRET
-    );
+    const decoded = jwt.verify(token.split(" ")[1], "JWT Secret");
 
     // Fetch user details
     const user = await User.findById(decoded.id).select("-password");

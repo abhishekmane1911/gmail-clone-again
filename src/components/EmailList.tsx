@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Star, Trash, Mail } from 'lucide-react';
-import { format } from 'date-fns';
+import React, { useEffect, useState } from "react";
+import { Star, Trash, Mail } from "lucide-react";
 
 interface Email {
   id: number;
@@ -16,36 +15,35 @@ function EmailList() {
   const [emails, setEmails] = useState<Email[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/emails', {
+    fetch("http://localhost:3000/api/emails", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      }
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
-      .then(res => res.json())
-      .then(data => setEmails(data));
+      .then((res) => res.json())
+      .then((data) => setEmails(data));
   }, []);
 
   return (
     <div className="bg-white">
-      {emails.map(email => (
+      {emails.map((email) => (
         <div
           key={email.id}
           className={`flex items-center px-4 py-2 border-b hover:shadow-md cursor-pointer ${
-            !email.read ? 'font-semibold bg-blue-50' : ''
+            !email.read ? "font-semibold bg-blue-50" : ""
           }`}
         >
           <button className="p-2 hover:bg-gray-100 rounded-full">
             <Star
               size={20}
-              className={email.starred ? 'text-yellow-400 fill-current' : 'text-gray-400'}
+              className={
+                email.starred ? "text-yellow-400 fill-current" : "text-gray-400"
+              }
             />
           </button>
           <div className="flex-1 min-w-0 ml-2">
             <div className="flex items-center">
               <span className="truncate">{email.from}</span>
-              <span className="ml-auto text-sm text-gray-500">
-                {format(new Date(email.date), 'MMM d')}
-              </span>
             </div>
             <div className="flex items-center text-gray-600">
               <span className="truncate">{email.subject}</span>

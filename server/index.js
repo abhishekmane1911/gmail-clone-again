@@ -8,10 +8,7 @@ import User from "./models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Email from "./models/Email.js";
-import authRequired from "./middlewares/authMiddleware.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import authMiddleware from "./middlewares/authMiddleware.js";
 
 await connectDb();
 
@@ -22,7 +19,6 @@ const port = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(join(__dirname, "../dist")));
 
 // Mock data
 const emails = [
@@ -46,9 +42,14 @@ const emails = [
   },
 ];
 
-app.get("/api/emails", authRequired, async (req, res) => {
-  const email = req.user.email;
-  res.json(await Email.find({ sender: email, recipient: email }));
+app.get("/api/emails", authMiddleware, async (req, res) => {
+  console.log(req.user.email);
+  const emails = await Email.find({
+    sender: req.user.email,
+    recipient: req.user.email,
+  });
+  console.log(emails);
+  res.json(emails);
 });
 
 app.post("/api/emails/send", async (req, res) => {
@@ -123,11 +124,6 @@ app.post("/api/emails", (req, res) => {
   };
   emails.push(newEmail);
   res.status(201).json(newEmail);
-});
-
-// Handle all other routes by serving the index.html
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, "../dist/index.html"));
 });
 
 app.listen(port, () => {
