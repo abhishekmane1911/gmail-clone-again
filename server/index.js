@@ -52,9 +52,10 @@ app.get("/api/emails", authMiddleware, async (req, res) => {
   res.json(emails);
 });
 
-app.post("/api/emails/send", async (req, res) => {
+app.post("/api/emails/send", authMiddleware, async (req, res) => {
   try {
-    const { sender, recipient, subject, body } = req.body;
+    const sender = req.user.email;
+    const { recipient, subject, body } = req.body;
 
     const email = new Email({
       sender,
