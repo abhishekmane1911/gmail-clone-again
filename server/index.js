@@ -53,9 +53,11 @@ app.get("/api/emails", authMiddleware, async (req, res) => {
 });
 
 app.post("/api/emails/send", authMiddleware, async (req, res) => {
+  console.log("trying send")
   try {
     const sender = req.user.email;
-    const { recipient, subject, body } = req.body;
+    const { to: recipient, subject, body } = req.body;
+    console.log(sender, subject, body);
 
     const email = new Email({
       sender,
@@ -64,7 +66,9 @@ app.post("/api/emails/send", authMiddleware, async (req, res) => {
       body,
     });
 
+    console.log(email);
     await email.save();
+    console.log(email);
     res.status(201).json({ message: "Email saved successfully", email });
   } catch (error) {
     res.status(500).json({ message: "Error saving email", error });

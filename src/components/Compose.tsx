@@ -16,10 +16,11 @@ function Compose({ onClose }: ComposeProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/emails', {
+      const response = await fetch('http://localhost:3000/api/emails/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(email),
       });

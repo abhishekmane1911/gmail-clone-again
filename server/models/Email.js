@@ -4,19 +4,15 @@ const emailSchema = new mongoose.Schema(
   {
     sender: {
       type: String,
-      required: true,
     },
     recipient: {
       type: String,
-      required: true,
     },
     subject: {
       type: String,
-      required: true,
     },
     body: {
       type: String,
-      required: true,
     },
     status: {
       type: String,
