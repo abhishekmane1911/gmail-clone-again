@@ -7,6 +7,8 @@ import connectDb from "./utils.js";
 import User from "./models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Email from "./models/Email.js";
+import authRequired from "./middlewares/authMiddleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,8 +46,27 @@ const emails = [
   },
 ];
 
-app.get("/api/emails", (req, res) => {
-  res.json(emails);
+app.get("/api/emails", authRequired, async (req, res) => {
+  const email = req.user.email;
+  res.json(await Email.find({ sender: email, recipient: email }));
+});
+
+app.post("/api/emails/send", async (req, res) => {
+  try {
+    const { sender, recipient, subject, body } = req.body;
+
+    const email = new Email({
+      sender,
+      recipient,
+      subject,
+      body,
+    });
+
+    await email.save();
+    res.status(201).json({ message: "Email saved successfully", email });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving email", error });
+  }
 });
 
 app.post("/api/login", async (req, res) => {
