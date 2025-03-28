@@ -49,10 +49,10 @@ app.get("/api/emails", (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -70,7 +70,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.post("/api/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   try {
     let user = await User.findOne({ username });
@@ -82,6 +82,7 @@ app.post("/api/signup", async (req, res) => {
     user = new User({
       username,
       password: hashedPassword,
+      email,
     });
 
     await user.save();
