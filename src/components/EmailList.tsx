@@ -16,7 +16,11 @@ function EmailList() {
   const [emails, setEmails] = useState<Email[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/emails')
+    fetch('http://localhost:3000/api/emails', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      }
+    })
       .then(res => res.json())
       .then(data => setEmails(data));
   }, []);
