@@ -50,8 +50,7 @@ app.get("/api/emails", authMiddleware, async (req, res) => {
   const emails_sender = await Email.find({
     sender: req.user.email,
   });
-  console.log([...emails_recipients, ...emails_sender]);
-  res.json(emails);
+  res.json([...emails_recipients, ...emails_sender]);
 });
 
 app.post("/api/emails/send", authMiddleware, async (req, res) => {
